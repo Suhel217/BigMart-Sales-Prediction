@@ -736,3 +736,20 @@ performance_df = pd.DataFrame(model_performance)
 # View it nicely
 performance_df.sort_values(by='RMSE')
 
+###Creating the submission file 
+#  Predict on test set
+y_train_pred_rf = rf_model.predict(X_test)
+
+#  Post-processing: Avoid negative sales
+y_train_pred_rf = np.where(y_train_pred_rf < 0, 0, y_train_pred_rf)
+
+#  Submission File
+submission_rf = pd.DataFrame({
+    'Item_Identifier': test_item_identifier,
+    'Outlet_Identifier': df_test_clean['Outlet_Identifier'].values,
+    'Item_Outlet_Sales': y_train_pred_rf
+})
+
+# Save submission
+submission_rf.to_csv('C:\\Users\\SUHEL\\Downloads\\RF_NewFeatures_LabelEncoder.csv', index=False)
+
